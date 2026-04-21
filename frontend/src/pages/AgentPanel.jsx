@@ -15,9 +15,9 @@ function SuggestionCard({ suggestion, index }) {
         {score > 0 && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
             <div className="progress-bar" style={{ width: 60 }}>
-              <div className="progress-fill" style={{ width: `${score}%`, background: score > 70 ? 'var(--accent-green)' : score > 40 ? 'var(--accent-gold)' : 'var(--accent-red)' }} />
+              <div className="progress-fill" style={{ width: `${score}%`, background: score > 70 ? '#10b981' : score > 40 ? '#f59e0b' : '#f43f5e' }} />
             </div>
-            <span className="mono" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{score}%</span>
+            <span className="mono" style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 600 }}>{score}%</span>
           </div>
         )}
       </div>
@@ -36,8 +36,8 @@ function SuggestionCard({ suggestion, index }) {
 }
 
 function ConflictCard({ conflict }) {
-  const colorMap = { CRITICAL: 'var(--accent-red)', HIGH: 'var(--accent-orange)', MEDIUM: 'var(--accent-gold)' };
-  const color = colorMap[conflict.severity] || 'var(--text-secondary)';
+  const colorMap = { CRITICAL: '#f43f5e', HIGH: '#fb923c', MEDIUM: '#f59e0b' };
+  const color = colorMap[conflict.severity] || '#94a3b8';
   return (
     <div className={`conflict-${conflict.severity.toLowerCase()}`} style={{ borderRadius: 8, padding: '1rem', marginBottom: '0.75rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.4rem' }}>
@@ -135,27 +135,35 @@ export default function AgentPanel() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div className="page-header">
         <div>
-          <div className="page-title" style={{ color: 'var(--accent-cyan)' }}><Bot size={22} /> AI Agent</div>
+          <div className="page-title"><Bot size={22} /> AI Agent</div>
           <div className="page-subtitle">Rule-based expert system with heuristic scoring for intelligent recommendations</div>
         </div>
         <div style={{
           display: 'flex', alignItems: 'center', gap: '0.5rem',
-          padding: '0.4rem 0.8rem', background: 'rgba(0,230,118,0.1)',
-          border: '1px solid rgba(0,230,118,0.3)', borderRadius: 20, fontSize: '0.75rem', color: 'var(--accent-green)'
+          padding: '0.5rem 1rem',
+          background: '#d1fae5',
+          border: '2px solid rgba(16,185,129,0.25)',
+          borderRadius: 20, fontSize: '0.78rem', color: '#065f46', fontWeight: 700,
+          boxShadow: '2px 2px 0px rgba(16,185,129,0.2)',
         }}>
-          <div style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent-green)' }} />
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981', boxShadow: '0 0 0 3px rgba(16,185,129,0.2)' }} />
           Agent Online
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '0.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '0' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', borderBottom: '2px solid rgba(79,110,247,0.1)', paddingBottom: '0' }}>
         {tabs.map(tab => (
           <button key={tab.key} onClick={() => setActiveTab(tab.key)} style={{
-            background: 'transparent', border: 'none', cursor: 'pointer',
-            padding: '0.6rem 1rem', color: activeTab === tab.key ? 'var(--accent-cyan)' : 'var(--text-secondary)',
-            borderBottom: activeTab === tab.key ? '2px solid var(--accent-cyan)' : '2px solid transparent',
-            fontFamily: 'var(--font)', fontSize: '0.875rem', fontWeight: activeTab === tab.key ? 600 : 400,
-            display: 'flex', alignItems: 'center', gap: '0.4rem', transition: 'color 0.15s',
+            background: activeTab === tab.key ? '#e8edff' : 'transparent',
+            border: activeTab === tab.key ? '2px solid rgba(79,110,247,0.2)' : '2px solid transparent',
+            cursor: 'pointer',
+            padding: '0.6rem 1.1rem',
+            borderRadius: '10px 10px 0 0',
+            color: activeTab === tab.key ? '#4f6ef7' : '#475569',
+            fontFamily: 'Plus Jakarta Sans, sans-serif',
+            fontSize: '0.875rem', fontWeight: activeTab === tab.key ? 700 : 500,
+            display: 'flex', alignItems: 'center', gap: '0.4rem', transition: 'all 0.15s',
+            boxShadow: activeTab === tab.key ? '3px 0 0 rgba(79,110,247,0.15)' : 'none',
           }}>
             <tab.icon size={15} />{tab.label}
           </button>
@@ -286,25 +294,25 @@ export default function AgentPanel() {
           {cargoResult && (
             <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div className="grid-4">
-                <div style={{ textAlign: 'center', padding: '0.75rem', background: 'var(--bg-secondary)', borderRadius: 8 }}>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--accent-cyan)' }}>{cargoResult.totalCargoProcessed}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Processed</div>
+                <div style={{ textAlign: 'center', padding: '0.85rem', background: '#e8edff', borderRadius: 12, border: '2px solid rgba(79,110,247,0.15)', boxShadow: '3px 3px 0px rgba(79,110,247,0.1)' }}>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#4f6ef7' }}>{cargoResult.totalCargoProcessed}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 700, marginTop: 2 }}>Processed</div>
                 </div>
-                <div style={{ textAlign: 'center', padding: '0.75rem', background: 'var(--bg-secondary)', borderRadius: 8 }}>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--accent-green)' }}>{cargoResult.successfulAssignments}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Assigned</div>
+                <div style={{ textAlign: 'center', padding: '0.85rem', background: '#d1fae5', borderRadius: 12, border: '2px solid rgba(16,185,129,0.2)', boxShadow: '3px 3px 0px rgba(16,185,129,0.12)' }}>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#10b981' }}>{cargoResult.successfulAssignments}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 700, marginTop: 2 }}>Assigned</div>
                 </div>
-                <div style={{ textAlign: 'center', padding: '0.75rem', background: 'var(--bg-secondary)', borderRadius: 8 }}>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--accent-gold)' }}>{cargoResult.splitOccurred}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Split</div>
+                <div style={{ textAlign: 'center', padding: '0.85rem', background: '#fef3c7', borderRadius: 12, border: '2px solid rgba(245,158,11,0.2)', boxShadow: '3px 3px 0px rgba(245,158,11,0.12)' }}>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#f59e0b' }}>{cargoResult.splitOccurred}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 700, marginTop: 2 }}>Split</div>
                 </div>
-                <div style={{ textAlign: 'center', padding: '0.75rem', background: 'var(--bg-secondary)', borderRadius: 8 }}>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--accent-red)' }}>{cargoResult.unassigned}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Unassigned</div>
+                <div style={{ textAlign: 'center', padding: '0.85rem', background: '#ffe4e6', borderRadius: 12, border: '2px solid rgba(244,63,94,0.2)', boxShadow: '3px 3px 0px rgba(244,63,94,0.12)' }}>
+                  <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#f43f5e' }}>{cargoResult.unassigned}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 700, marginTop: 2 }}>Unassigned</div>
                 </div>
               </div>
-              <div style={{ background: 'var(--bg-secondary)', borderRadius: 8, padding: '1rem', maxHeight: 300, overflow: 'auto' }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Action Log</div>
+              <div style={{ background: '#f0f4ff', borderRadius: 12, padding: '1rem', maxHeight: 300, overflow: 'auto', border: '2px solid rgba(79,110,247,0.1)' }}>
+                <div style={{ fontSize: '0.72rem', fontWeight: 800, color: '#94a3b8', marginBottom: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Action Log</div>
                 {cargoResult.actions.map((action, i) => (
                   <div key={i} className="mono" style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', padding: '0.25rem 0', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
                     <span style={{ color: 'var(--text-muted)' }}>[{String(i+1).padStart(2,'0')}]</span> {action}

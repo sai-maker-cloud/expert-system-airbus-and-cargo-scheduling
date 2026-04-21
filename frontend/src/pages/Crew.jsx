@@ -103,7 +103,7 @@ export default function Crew() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div className="page-header">
         <div>
-          <div className="page-title"><Users size={22} color="var(--accent-cyan)" /> Crew Management</div>
+          <div className="page-title"><Users size={22} /> Crew Management</div>
           <div className="page-subtitle">{crew.length} total crew members</div>
         </div>
         <button className="btn btn-primary" onClick={() => { setEditItem(null); setShowModal(true); }}>
@@ -112,10 +112,10 @@ export default function Crew() {
       </div>
 
       <div className="grid-4">
-        <div className="stat-card green"><div className="stat-label">Available</div><div className="stat-value" style={{ fontSize: '1.5rem', color: 'var(--accent-green)' }}>{available}</div></div>
-        <div className="stat-card blue"><div className="stat-label">On Duty</div><div className="stat-value" style={{ fontSize: '1.5rem', color: 'var(--accent-blue)' }}>{onDuty}</div></div>
-        <div className="stat-card cyan"><div className="stat-label">Pilots</div><div className="stat-value" style={{ fontSize: '1.5rem', color: 'var(--accent-cyan)' }}>{pilots}</div></div>
-        <div className="stat-card gold"><div className="stat-label">Total Flight Hours</div><div className="stat-value" style={{ fontSize: '1.5rem', color: 'var(--accent-gold)' }}>{Math.round(totalHours).toLocaleString()}</div></div>
+        <div className="stat-card green"><div className="stat-label">Available</div><div className="stat-value" style={{ fontSize: '1.5rem', color: '#10b981' }}>{available}</div></div>
+        <div className="stat-card blue"><div className="stat-label">On Duty</div><div className="stat-value" style={{ fontSize: '1.5rem', color: '#4f6ef7' }}>{onDuty}</div></div>
+        <div className="stat-card cyan"><div className="stat-label">Pilots</div><div className="stat-value" style={{ fontSize: '1.5rem', color: '#0ea5e9' }}>{pilots}</div></div>
+        <div className="stat-card gold"><div className="stat-label">Total Flight Hours</div><div className="stat-value" style={{ fontSize: '1.5rem', color: '#f59e0b' }}>{Math.round(totalHours).toLocaleString()}</div></div>
       </div>
 
       <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
@@ -139,31 +139,31 @@ export default function Crew() {
             <tr><th>Employee ID</th><th>Name</th><th>Role</th><th>Base</th><th>Hours Today</th><th>Total Hours</th><th>License Expiry</th><th>Status</th><th>Actions</th></tr>
           </thead>
           <tbody>
-            {loading ? <tr><td colSpan={9} className="loading" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>Loading...</td></tr>
+            {loading ? <tr><td colSpan={9} className="loading" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>Loading...</td></tr>
             : filtered.map(c => {
               const licenseExpired = c.licenseExpiry && new Date(c.licenseExpiry) < new Date();
               const licenseExpiringSoon = c.licenseExpiry && !licenseExpired && (new Date(c.licenseExpiry) - new Date()) < 30 * 86400000;
               return (
                 <tr key={c.id}>
-                  <td><span className="mono" style={{ color: 'var(--accent-cyan)' }}>{c.employeeId}</span></td>
-                  <td style={{ fontWeight: 500 }}>{c.fullName}</td>
-                  <td><span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{c.role.replace(/_/g,' ')}</span></td>
-                  <td><span className="mono" style={{ color: 'var(--text-secondary)' }}>{c.baseStation}</span></td>
+                  <td><span className="mono" style={{ color: '#4f6ef7', fontWeight: 700, background: '#e8edff', padding: '2px 8px', borderRadius: 6, fontSize: '0.8rem' }}>{c.employeeId}</span></td>
+                  <td style={{ fontWeight: 600 }}>{c.fullName}</td>
+                  <td><span style={{ fontSize: '0.8rem', color: '#475569', background: '#f1f5f9', padding: '2px 8px', borderRadius: 6, fontWeight: 600 }}>{c.role.replace(/_/g,' ')}</span></td>
+                  <td><span className="mono" style={{ color: '#0ea5e9', fontWeight: 600 }}>{c.baseStation}</span></td>
                   <td>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                      <span className="mono" style={{ fontSize: '0.85rem' }}>{c.hoursFlownToday?.toFixed(1)}h</span>
+                      <span className="mono" style={{ fontSize: '0.85rem', fontWeight: 600 }}>{c.hoursFlownToday?.toFixed(1)}h</span>
                       <div className="progress-bar" style={{ width: 60 }}>
-                        <div className="progress-fill" style={{ width: `${Math.min((c.hoursFlownToday/8)*100, 100)}%`, background: c.hoursFlownToday >= 7 ? 'var(--accent-red)' : c.hoursFlownToday >= 5 ? 'var(--accent-gold)' : 'var(--accent-green)' }} />
+                        <div className="progress-fill" style={{ width: `${Math.min((c.hoursFlownToday/8)*100, 100)}%`, background: c.hoursFlownToday >= 7 ? '#f43f5e' : c.hoursFlownToday >= 5 ? '#f59e0b' : '#10b981' }} />
                       </div>
                     </div>
                   </td>
-                  <td><span className="mono" style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{c.totalHoursFlown?.toFixed(0)}h</span></td>
+                  <td><span className="mono" style={{ fontSize: '0.85rem', color: '#475569' }}>{c.totalHoursFlown?.toFixed(0)}h</span></td>
                   <td>
                     {c.licenseExpiry ? (
-                      <span style={{ fontSize: '0.8rem', color: licenseExpired ? 'var(--accent-red)' : licenseExpiringSoon ? 'var(--accent-gold)' : 'var(--text-secondary)' }}>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 600, color: licenseExpired ? '#f43f5e' : licenseExpiringSoon ? '#f59e0b' : '#475569' }}>
                         {licenseExpired ? '⚠ EXPIRED' : c.licenseExpiry}
                       </span>
-                    ) : <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>N/A</span>}
+                    ) : <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}>N/A</span>}
                   </td>
                   <td>
                     <select className="select" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem', width: 'auto' }} value={c.status} onChange={e => updateStatus(c.id, e.target.value)}>

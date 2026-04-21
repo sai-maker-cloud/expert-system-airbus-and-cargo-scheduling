@@ -109,7 +109,7 @@ function AssignModal({ flight, aircraft, crew, onClose, onSave }) {
               <Plane size={15} color="var(--accent-cyan)" /> Aircraft Assignment
             </div>
             {flight.aircraft ? (
-              <div style={{ padding: '0.75rem', background: 'rgba(0,230,118,0.08)', borderRadius: 8, border: '1px solid rgba(0,230,118,0.2)', fontSize: '0.875rem' }}>
+              <div style={{ padding: '0.75rem 1rem', background: '#d1fae5', borderRadius: 10, border: '2px solid rgba(16,185,129,0.25)', fontSize: '0.875rem', fontWeight: 600 }}>
                 ✓ {flight.aircraft.registrationNumber} — {flight.aircraft.model}
               </div>
             ) : (
@@ -202,7 +202,7 @@ export default function Flights() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div className="page-header">
         <div>
-          <div className="page-title"><PlaneTakeoff size={22} color="var(--accent-cyan)" /> Flights</div>
+          <div className="page-title"><PlaneTakeoff size={22} /> Flights</div>
           <div className="page-subtitle">{flights.length} flights · {flights.filter(f => f.status === 'SCHEDULED').length} scheduled</div>
         </div>
         <button className="btn btn-primary" onClick={() => { setEditFlight(null); setShowModal(true); }}>
@@ -237,24 +237,24 @@ export default function Flights() {
                 <tr><td colSpan={9} style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>No flights found</td></tr>
               ) : filtered.map(f => (
                 <tr key={f.id} style={{ opacity: f.status === 'CANCELLED' ? 0.5 : 1 }}>
-                  <td><span className="mono" style={{ color: 'var(--accent-cyan)', fontWeight: 600 }}>{f.flightNumber}</span></td>
+                  <td><span className="mono" style={{ color: '#4f6ef7', fontWeight: 700, background: '#e8edff', padding: '2px 8px', borderRadius: 6 }}>{f.flightNumber}</span></td>
                   <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 500 }}>
-                      <span style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>{f.origin}</span>
-                      <span style={{ color: 'var(--text-muted)' }}>→</span>
-                      <span style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>{f.destination}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 600 }}>
+                      <span style={{ color: '#1e293b', fontSize: '0.85rem' }}>{f.origin}</span>
+                      <span style={{ color: '#94a3b8' }}>→</span>
+                      <span style={{ color: '#1e293b', fontSize: '0.85rem' }}>{f.destination}</span>
                     </div>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{f.distanceKm} km</div>
+                    <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 500 }}>{f.distanceKm} km</div>
                   </td>
                   <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{new Date(f.departureTime).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</td>
                   <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{new Date(f.arrivalTime).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</td>
                   <td>
                     {f.aircraft ? (
                       <div>
-                        <div style={{ fontSize: '0.8rem', fontWeight: 500 }}>{f.aircraft.registrationNumber}</div>
-                        <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{f.aircraft.model}</div>
+                        <div style={{ fontSize: '0.8rem', fontWeight: 700 }}>{f.aircraft.registrationNumber}</div>
+                        <div style={{ fontSize: '0.7rem', color: '#94a3b8', fontWeight: 500 }}>{f.aircraft.model}</div>
                       </div>
-                    ) : <span style={{ color: 'var(--accent-red)', fontSize: '0.8rem' }}>⚠ Unassigned</span>}
+                    ) : <span style={{ color: '#f43f5e', fontSize: '0.8rem', fontWeight: 700 }}>⚠ Unassigned</span>}
                   </td>
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>

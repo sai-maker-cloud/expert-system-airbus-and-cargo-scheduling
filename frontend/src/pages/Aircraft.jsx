@@ -101,7 +101,7 @@ export default function Aircraft() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div className="page-header">
         <div>
-          <div className="page-title"><Plane size={22} color="var(--accent-cyan)" /> Aircraft Fleet</div>
+          <div className="page-title"><Plane size={22} /> Aircraft Fleet</div>
           <div className="page-subtitle">{aircraft.length} aircraft registered</div>
         </div>
         <button className="btn btn-primary" onClick={() => { setEditItem(null); setShowModal(true); }}>
@@ -113,7 +113,7 @@ export default function Aircraft() {
         {Object.entries(stats).map(([status, count]) => (
           <div key={status} className={`stat-card ${status === 'AVAILABLE' ? 'green' : status === 'IN_FLIGHT' ? 'blue' : status === 'MAINTENANCE' ? 'gold' : 'red'}`} style={{ cursor: 'pointer' }} onClick={() => setStatusFilter(statusFilter === status ? '' : status)}>
             <div className="stat-label">{status.replace('_', ' ')}</div>
-            <div className="stat-value" style={{ fontSize: '1.5rem' }}>{count}</div>
+            <div className="stat-value" style={{ fontSize: '1.5rem', color: status === 'AVAILABLE' ? '#10b981' : status === 'IN_FLIGHT' ? '#4f6ef7' : status === 'MAINTENANCE' ? '#f59e0b' : '#f43f5e' }}>{count}</div>
           </div>
         ))}
       </div>
@@ -138,13 +138,13 @@ export default function Aircraft() {
             {loading ? <tr><td colSpan={9} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }} className="loading">Loading...</td></tr>
             : filtered.map(a => (
               <tr key={a.id}>
-                <td><span className="mono" style={{ color: 'var(--accent-cyan)', fontWeight: 600 }}>{a.registrationNumber}</span></td>
-                <td style={{ fontWeight: 500 }}>{a.model}</td>
-                <td className="mono">{a.maxCargoWeight.toLocaleString()} kg</td>
-                <td className="mono">{a.maxCargoVolume} m³</td>
-                <td className="mono">{a.passengerCapacity}</td>
-                <td><span style={{ color: a.fuelEfficiency > 9 ? 'var(--accent-green)' : 'var(--text-primary)' }}>{a.fuelEfficiency} km/L</span></td>
-                <td style={{ fontSize: '0.8rem', color: a.nextMaintenanceDate ? 'var(--text-secondary)' : 'var(--text-muted)' }}>{a.nextMaintenanceDate || 'N/A'}</td>
+                <td><span className="mono" style={{ color: '#4f6ef7', fontWeight: 700, background: '#e8edff', padding: '2px 8px', borderRadius: 6 }}>{a.registrationNumber}</span></td>
+                <td style={{ fontWeight: 600 }}>{a.model}</td>
+                <td className="mono" style={{ fontWeight: 600 }}>{a.maxCargoWeight.toLocaleString()} kg</td>
+                <td className="mono" style={{ fontWeight: 600 }}>{a.maxCargoVolume} m³</td>
+                <td className="mono" style={{ fontWeight: 600 }}>{a.passengerCapacity}</td>
+                <td><span style={{ color: a.fuelEfficiency > 9 ? '#10b981' : '#1e293b', fontWeight: 600 }}>{a.fuelEfficiency} km/L</span></td>
+                <td style={{ fontSize: '0.8rem', color: a.nextMaintenanceDate ? '#475569' : '#94a3b8', fontWeight: 500 }}>{a.nextMaintenanceDate || 'N/A'}</td>
                 <td>
                   <select className="select" style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem', width: 'auto' }} value={a.status} onChange={e => updateStatus(a.id, e.target.value)}>
                     {statusOptions.map(s => <option key={s} value={s}>{s}</option>)}

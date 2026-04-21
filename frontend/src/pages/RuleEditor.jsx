@@ -44,7 +44,7 @@ function RuleModal({ rule, onClose, onSave }) {
           <div className="form-group"><label className="form-label">Description</label><textarea className="textarea" value={form.description} onChange={e => set('description', e.target.value)} rows={3} /></div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <input type="checkbox" id="isActive" checked={form.isActive} onChange={e => set('isActive', e.target.checked)} />
-            <label htmlFor="isActive" style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', cursor: 'pointer' }}>Active</label>
+            <label htmlFor="isActive" style={{ fontSize: '0.875rem', color: '#475569', cursor: 'pointer', fontWeight: 600 }}>Active</label>
           </div>
           <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
             <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
@@ -81,13 +81,14 @@ export default function RuleEditor() {
 
   const filtered = rules.filter(r => !filterCat || r.ruleCategory === filterCat);
 
-  const categoryColor = { CREW: 'var(--accent-cyan)', AIRCRAFT: 'var(--accent-blue)', CARGO: 'var(--accent-gold)', FLIGHT: 'var(--accent-green)', SAFETY: 'var(--accent-red)' };
+  const categoryColor = { CREW: '#0ea5e9', AIRCRAFT: '#4f6ef7', CARGO: '#f59e0b', FLIGHT: '#10b981', SAFETY: '#f43f5e' };
+  const categoryBg =    { CREW: '#e0f7ff', AIRCRAFT: '#e8edff', CARGO: '#fff8e0', FLIGHT: '#e0fff4', SAFETY: '#ffe4e6' };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div className="page-header">
         <div>
-          <div className="page-title"><Settings size={22} color="var(--accent-cyan)" /> Rule Editor</div>
+          <div className="page-title"><Settings size={22} /> Rule Editor</div>
           <div className="page-subtitle">Configure the AI Agent's decision rules and constraints</div>
         </div>
         <button className="btn btn-primary" onClick={() => { setEditItem(null); setShowModal(true); }}>
@@ -96,10 +97,15 @@ export default function RuleEditor() {
       </div>
 
       <div style={{
-        padding: '1rem 1.25rem', background: 'rgba(0,128,255,0.06)',
-        border: '1px solid rgba(0,128,255,0.2)', borderRadius: 'var(--radius-lg)', fontSize: '0.875rem', color: 'var(--text-secondary)',
+        padding: '1rem 1.25rem',
+        background: 'linear-gradient(135deg, #e8edff, #ede9fe)',
+        border: '2px solid rgba(79,110,247,0.15)',
+        borderRadius: 16,
+        fontSize: '0.875rem', color: '#475569',
+        boxShadow: '3px 3px 0px rgba(79,110,247,0.1)',
+        fontWeight: 500,
       }}>
-        <strong style={{ color: 'var(--accent-blue)' }}>⚙ Rule Engine:</strong> These rules are loaded dynamically by the AI Agent at runtime. Changes take effect immediately. The rule engine evaluates constraints for crew duty limits, aircraft maintenance buffers, cargo capacity thresholds, and priority scheduling windows.
+        <strong style={{ color: '#4f6ef7' }}>⚙ Rule Engine:</strong> These rules are loaded dynamically by the AI Agent at runtime. Changes take effect immediately. The rule engine evaluates constraints for crew duty limits, aircraft maintenance buffers, cargo capacity thresholds, and priority scheduling windows.
       </div>
 
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
@@ -122,15 +128,15 @@ export default function RuleEditor() {
               <tr key={r.id} style={{ opacity: r.isActive ? 1 : 0.5 }}>
                 <td style={{ fontWeight: 500 }}>{r.ruleName}</td>
                 <td>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: categoryColor[r.ruleCategory], background: `${categoryColor[r.ruleCategory]}22`, padding: '2px 8px', borderRadius: 4 }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: categoryColor[r.ruleCategory], background: categoryBg[r.ruleCategory] || '#f1f5f9', padding: '3px 10px', borderRadius: 20, border: `2px solid ${categoryColor[r.ruleCategory]}30` }}>
                     {r.ruleCategory}
                   </span>
                 </td>
-                <td><span className="mono" style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)' }}>{r.ruleKey}</span></td>
+                <td><span className="mono" style={{ fontSize: '0.8rem', fontWeight: 700, color: '#4f6ef7', background: '#e8edff', padding: '2px 8px', borderRadius: 6 }}>{r.ruleKey}</span></td>
                 <td><span className="mono" style={{ fontWeight: 700, fontSize: '0.9rem' }}>{r.ruleValue}</span></td>
-                <td style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{r.description}</td>
+                <td style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.8rem', color: '#475569', fontWeight: 500 }}>{r.description}</td>
                 <td>
-                  <button onClick={() => toggle(r.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: r.isActive ? 'var(--accent-green)' : 'var(--text-muted)', display: 'flex', alignItems: 'center' }}>
+                  <button onClick={() => toggle(r.id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: r.isActive ? '#10b981' : '#94a3b8', display: 'flex', alignItems: 'center' }}>
                     {r.isActive ? <ToggleRight size={22} /> : <ToggleLeft size={22} />}
                   </button>
                 </td>

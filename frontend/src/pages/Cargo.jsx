@@ -79,15 +79,15 @@ function AssignCargoModal({ cargo, flights, onClose, onSave }) {
     <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="modal">
         <div className="modal-title">Assign Cargo to Flight</div>
-        <div style={{ marginBottom: '1rem', padding: '0.75rem', background: 'var(--bg-secondary)', borderRadius: 8 }}>
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Cargo</div>
-          <div style={{ fontWeight: 600 }}>{cargo.trackingNumber}</div>
-          <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{cargo.weight}kg · {cargo.volume}m³ · To: {cargo.destination}</div>
+        <div style={{ marginBottom: '1rem', padding: '0.75rem 1rem', background: '#f0f4ff', borderRadius: 12, border: '2px solid rgba(79,110,247,0.1)' }}>
+          <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Cargo</div>
+          <div style={{ fontWeight: 700, fontSize: '0.95rem' }}>{cargo.trackingNumber}</div>
+          <div style={{ fontSize: '0.85rem', color: '#475569', fontWeight: 500 }}>{cargo.weight}kg · {cargo.volume}m³ · To: {cargo.destination}</div>
         </div>
         <div className="form-group" style={{ marginBottom: '1rem' }}>
           <label className="form-label">Select Flight to {cargo.destination}</label>
           {matchingFlights.length === 0 ? (
-            <div style={{ color: 'var(--accent-red)', fontSize: '0.875rem', padding: '0.5rem' }}>
+            <div style={{ color: '#f43f5e', fontSize: '0.875rem', padding: '0.5rem', fontWeight: 600 }}>
               No available flights to {cargo.destination} with aircraft assigned
             </div>
           ) : (
@@ -155,7 +155,7 @@ export default function Cargo() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div className="page-header">
         <div>
-          <div className="page-title"><Package size={22} color="var(--accent-cyan)" /> Cargo Management</div>
+          <div className="page-title"><Package size={22} /> Cargo Management</div>
           <div className="page-subtitle">{cargo.length} shipments · {totalWeight.toFixed(0)}kg total</div>
         </div>
         <button className="btn btn-primary" onClick={() => { setEditItem(null); setShowModal(true); }}>
@@ -164,10 +164,10 @@ export default function Cargo() {
       </div>
 
       <div className="grid-4">
-        <div className="stat-card cyan"><div className="stat-label">Total Shipments</div><div className="stat-value" style={{ fontSize: '1.5rem', color: 'var(--accent-cyan)' }}>{cargo.length}</div></div>
-        <div className="stat-card gold"><div className="stat-label">Pending</div><div className="stat-value" style={{ fontSize: '1.5rem', color: 'var(--accent-gold)' }}>{pending}</div></div>
-        <div className="stat-card red"><div className="stat-label">High Priority</div><div className="stat-value" style={{ fontSize: '1.5rem', color: 'var(--accent-red)' }}>{highPriority}</div></div>
-        <div className="stat-card blue"><div className="stat-label">Total Weight</div><div className="stat-value" style={{ fontSize: '1.5rem', color: 'var(--accent-blue)' }}>{(totalWeight/1000).toFixed(1)}t</div></div>
+        <div className="stat-card cyan"><div className="stat-label">Total Shipments</div><div className="stat-value" style={{ fontSize: '1.5rem', color: '#0ea5e9' }}>{cargo.length}</div></div>
+        <div className="stat-card gold"><div className="stat-label">Pending</div><div className="stat-value" style={{ fontSize: '1.5rem', color: '#f59e0b' }}>{pending}</div></div>
+        <div className="stat-card red"><div className="stat-label">High Priority</div><div className="stat-value" style={{ fontSize: '1.5rem', color: '#f43f5e' }}>{highPriority}</div></div>
+        <div className="stat-card blue"><div className="stat-label">Total Weight</div><div className="stat-value" style={{ fontSize: '1.5rem', color: '#4f6ef7' }}>{(totalWeight/1000).toFixed(1)}t</div></div>
       </div>
 
       <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
@@ -194,15 +194,15 @@ export default function Cargo() {
             {loading ? <tr><td colSpan={9} className="loading" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>Loading...</td></tr>
             : filtered.map(c => (
               <tr key={c.id}>
-                <td><span className="mono" style={{ color: 'var(--accent-cyan)', fontSize: '0.8rem' }}>{c.trackingNumber}</span></td>
-                <td style={{ maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.875rem' }}>{c.description || '—'}</td>
-                <td style={{ color: 'var(--text-secondary)', fontSize: '0.8rem' }}>{c.origin} → {c.destination}</td>
-                <td><span className="mono" style={{ fontSize: '0.85rem' }}>{c.weight.toLocaleString()}kg</span></td>
+                <td><span className="mono" style={{ color: '#4f6ef7', fontWeight: 700, background: '#e8edff', padding: '2px 8px', borderRadius: 6, fontSize: '0.8rem' }}>{c.trackingNumber}</span></td>
+                <td style={{ maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.875rem', fontWeight: 600 }}>{c.description || '—'}</td>
+                <td style={{ color: '#475569', fontSize: '0.8rem', fontWeight: 500 }}>{c.origin} → {c.destination}</td>
+                <td><span className="mono" style={{ fontSize: '0.85rem', fontWeight: 700 }}>{c.weight.toLocaleString()}kg</span></td>
                 <td><span className={`badge badge-${c.priority.toLowerCase()}`}>{c.priority}</span></td>
                 <td>
                   {c.flightNumber ? (
-                    <span className="mono" style={{ color: 'var(--accent-blue)', fontSize: '0.8rem' }}>{c.flightNumber}</span>
-                  ) : <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>Unassigned</span>}
+                    <span className="mono" style={{ color: '#4f6ef7', fontSize: '0.8rem', fontWeight: 700, background: '#e8edff', padding: '2px 8px', borderRadius: 6 }}>{c.flightNumber}</span>
+                  ) : <span style={{ color: '#94a3b8', fontSize: '0.8rem', fontWeight: 500 }}>Unassigned</span>}
                 </td>
                 <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{c.customerName || '—'}</td>
                 <td><span className={`badge badge-${c.status.toLowerCase()}`}>{c.status}</span></td>

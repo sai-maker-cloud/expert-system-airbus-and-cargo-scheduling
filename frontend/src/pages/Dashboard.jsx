@@ -1,13 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plane, PlaneTakeoff, Users, Package, AlertTriangle, TrendingUp, Bot } from 'lucide-react';
+import { Plane, PlaneTakeoff, Users, Package, AlertTriangle, TrendingUp, Bot, Sparkles } from 'lucide-react';
 import { flightApi, aircraftApi, crewApi, cargoApi, agentApi } from '../utils/api';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const PIE_COLORS = {
-  AVAILABLE: '#00e676', IN_FLIGHT: '#0080ff', MAINTENANCE: '#f0a500',
-  RETIRED: '#ff4757', SCHEDULED: '#00e676', BOARDING: '#0080ff',
-  DELAYED: '#f0a500', CANCELLED: '#ff4757', LANDED: '#94a3b8',
+  AVAILABLE: '#10b981', IN_FLIGHT: '#4f6ef7', MAINTENANCE: '#f59e0b',
+  RETIRED: '#f43f5e', SCHEDULED: '#10b981', BOARDING: '#4f6ef7',
+  DELAYED: '#f59e0b', CANCELLED: '#f43f5e', LANDED: '#94a3b8',
+};
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div style={{
+        background: 'white', border: '2px solid rgba(79,110,247,0.15)',
+        borderRadius: 12, padding: '0.6rem 0.9rem',
+        boxShadow: '4px 4px 0px rgba(79,110,247,0.12)',
+        fontFamily: 'Plus Jakarta Sans, sans-serif', fontSize: '0.8rem', fontWeight: 600,
+      }}>
+        <div style={{ color: '#475569' }}>{label || payload[0]?.name}</div>
+        <div style={{ color: '#4f6ef7', fontSize: '1rem', fontWeight: 800 }}>{payload[0]?.value}</div>
+      </div>
+    );
+  }
+  return null;
 };
 
 export default function Dashboard() {
@@ -48,8 +65,17 @@ export default function Dashboard() {
   const scheduledFlights = data.flights.filter(f => f.status === 'SCHEDULED' || f.status === 'BOARDING').length;
 
   if (loading) return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '50vh', color: 'var(--text-secondary)' }}>
-      <div className="loading">Loading dashboard...</div>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '50vh', flexDirection: 'column', gap: '1rem' }}>
+      <div style={{
+        width: 60, height: 60, borderRadius: 18,
+        background: 'linear-gradient(135deg, #4f6ef7, #8b5cf6)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '4px 4px 0px rgba(79,110,247,0.3)',
+        animation: 'float 1.5s ease-in-out infinite',
+      }}>
+        <Plane size={28} color="white" />
+      </div>
+      <div style={{ color: '#475569', fontWeight: 600, fontSize: '0.95rem' }} className="loading">Loading dashboard...</div>
     </div>
   );
 
@@ -57,33 +83,50 @@ export default function Dashboard() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div className="page-header">
         <div>
-          <div className="page-title"><TrendingUp size={22} color="var(--accent-cyan)" /> Operations Dashboard</div>
+          <div className="page-title"><TrendingUp size={24} /> Operations Dashboard</div>
           <div className="page-subtitle">Real-time overview of all airline operations</div>
         </div>
-        <button className="btn btn-cyan" onClick={() => navigate('/agent')}>
-          <Bot size={16} /> Open AI Agent
+        <button
+          className="btn btn-primary btn-lg"
+          onClick={() => navigate('/agent')}
+          style={{ background: 'linear-gradient(135deg, #ec4899, #8b5cf6)', borderColor: 'rgba(255,255,255,0.3)' }}
+        >
+          <Sparkles size={16} /> Open AI Agent
         </button>
       </div>
 
+      {/* Conflict Alert */}
       {data.conflicts.length > 0 && (
         <div style={{
-          background: criticalConflicts > 0 ? 'rgba(255,71,87,0.08)' : 'rgba(240,165,0,0.08)',
-          border: `1px solid ${criticalConflicts > 0 ? 'rgba(255,71,87,0.4)' : 'rgba(240,165,0,0.4)'}`,
-          borderRadius: 'var(--radius-lg)',
-          padding: '1rem 1.25rem',
+          background: criticalConflicts > 0
+            ? 'linear-gradient(135deg, #fff5f6, #fff0fb)'
+            : 'linear-gradient(135deg, #fffce8, #fff8f0)',
+          border: `2px solid ${criticalConflicts > 0 ? 'rgba(244,63,94,0.3)' : 'rgba(245,158,11,0.3)'}`,
+          borderRadius: 20,
+          padding: '1.1rem 1.4rem',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: '1rem',
           flexWrap: 'wrap',
+          boxShadow: criticalConflicts > 0
+            ? '4px 4px 0px rgba(244,63,94,0.15)'
+            : '4px 4px 0px rgba(245,158,11,0.15)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <AlertTriangle size={20} color={criticalConflicts > 0 ? 'var(--accent-red)' : 'var(--accent-gold)'} />
+            <div style={{
+              width: 38, height: 38, borderRadius: 12,
+              background: criticalConflicts > 0 ? '#ffe4e6' : '#fef3c7',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              border: `2px solid ${criticalConflicts > 0 ? 'rgba(244,63,94,0.3)' : 'rgba(245,158,11,0.3)'}`,
+            }}>
+              <AlertTriangle size={18} color={criticalConflicts > 0 ? '#f43f5e' : '#f59e0b'} />
+            </div>
             <div>
-              <div style={{ fontWeight: 600 }}>
+              <div style={{ fontWeight: 700, color: '#1e293b' }}>
                 {data.conflicts.length} Active Conflict{data.conflicts.length !== 1 ? 's' : ''} Detected
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+              <div style={{ fontSize: '0.8rem', color: '#475569', marginTop: 2 }}>
                 {criticalConflicts > 0 && `${criticalConflicts} CRITICAL · `}{highConflicts} HIGH priority issues
               </div>
             </div>
@@ -94,88 +137,112 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* Stat Cards */}
       <div className="grid-4">
         <div className="stat-card blue">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div className="stat-label">Active Flights</div>
-            <PlaneTakeoff size={18} color="var(--accent-blue)" />
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: '#dbeafe', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid rgba(79,110,247,0.2)' }}>
+              <PlaneTakeoff size={16} color="#4f6ef7" />
+            </div>
           </div>
-          <div className="stat-value" style={{ color: 'var(--accent-blue)' }}>{scheduledFlights}</div>
+          <div className="stat-value" style={{ color: '#4f6ef7' }}>{scheduledFlights}</div>
           <div className="stat-sub">{data.flights.length} total · {data.flights.filter(f => f.status === 'IN_FLIGHT').length} in-flight</div>
         </div>
         <div className="stat-card green">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div className="stat-label">Available Aircraft</div>
-            <Plane size={18} color="var(--accent-green)" />
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: '#d1fae5', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid rgba(16,185,129,0.2)' }}>
+              <Plane size={16} color="#10b981" />
+            </div>
           </div>
-          <div className="stat-value" style={{ color: 'var(--accent-green)' }}>{availableAircraft}</div>
+          <div className="stat-value" style={{ color: '#10b981' }}>{availableAircraft}</div>
           <div className="stat-sub">{data.aircraft.length} total · {data.aircraft.filter(a => a.status === 'MAINTENANCE').length} in maintenance</div>
         </div>
         <div className="stat-card cyan">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div className="stat-label">Available Crew</div>
-            <Users size={18} color="var(--accent-cyan)" />
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: '#e0f7ff', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid rgba(14,165,233,0.2)' }}>
+              <Users size={16} color="#0ea5e9" />
+            </div>
           </div>
-          <div className="stat-value" style={{ color: 'var(--accent-cyan)' }}>{availableCrew}</div>
+          <div className="stat-value" style={{ color: '#0ea5e9' }}>{availableCrew}</div>
           <div className="stat-sub">{data.crew.length} total · {data.crew.filter(c => c.status === 'ON_DUTY').length} on duty</div>
         </div>
         <div className="stat-card gold">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div className="stat-label">Pending Cargo</div>
-            <Package size={18} color="var(--accent-gold)" />
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: '#fef3c7', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid rgba(245,158,11,0.2)' }}>
+              <Package size={16} color="#f59e0b" />
+            </div>
           </div>
-          <div className="stat-value" style={{ color: 'var(--accent-gold)' }}>{pendingCargo}</div>
+          <div className="stat-value" style={{ color: '#f59e0b' }}>{pendingCargo}</div>
           <div className="stat-sub">{data.cargo.length} total · {data.cargo.filter(c => c.status === 'ASSIGNED').length} assigned</div>
         </div>
       </div>
 
+      {/* Charts */}
       <div className="grid-3">
         <div className="card">
-          <div style={{ fontWeight: 600, marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>FLIGHT STATUS</div>
+          <div style={{ fontWeight: 700, marginBottom: '1rem', fontSize: '0.85rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.07em' }}>✈ Flight Status</div>
           <ResponsiveContainer width="100%" height={180}>
             <PieChart>
-              <Pie data={flightStatusData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} label={({ name, value }) => `${name}: ${value}`} labelLine={false} fontSize={11}>
+              <Pie data={flightStatusData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70}
+                label={({ name, value }) => `${name}: ${value}`} labelLine={false} fontSize={10}>
                 {flightStatusData.map((entry) => (
-                  <Cell key={entry.name} fill={PIE_COLORS[entry.name] || '#666'} />
+                  <Cell key={entry.name} fill={PIE_COLORS[entry.name] || '#94a3b8'} />
                 ))}
               </Pie>
-              <Tooltip contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--text-primary)' }} />
+              <Tooltip content={<CustomTooltip />} />
             </PieChart>
           </ResponsiveContainer>
         </div>
 
         <div className="card">
-          <div style={{ fontWeight: 600, marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>AIRCRAFT STATUS</div>
+          <div style={{ fontWeight: 700, marginBottom: '1rem', fontSize: '0.85rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.07em' }}>🛩 Aircraft Status</div>
           <ResponsiveContainer width="100%" height={180}>
             <PieChart>
-              <Pie data={aircraftStatusData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70} label={({ name, value }) => `${name}: ${value}`} labelLine={false} fontSize={11}>
+              <Pie data={aircraftStatusData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={70}
+                label={({ name, value }) => `${name}: ${value}`} labelLine={false} fontSize={10}>
                 {aircraftStatusData.map((entry) => (
-                  <Cell key={entry.name} fill={PIE_COLORS[entry.name] || '#666'} />
+                  <Cell key={entry.name} fill={PIE_COLORS[entry.name] || '#94a3b8'} />
                 ))}
               </Pie>
-              <Tooltip contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--text-primary)' }} />
+              <Tooltip content={<CustomTooltip />} />
             </PieChart>
           </ResponsiveContainer>
         </div>
 
         <div className="card">
-          <div style={{ fontWeight: 600, marginBottom: '1rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>CARGO BY PRIORITY</div>
+          <div style={{ fontWeight: 700, marginBottom: '1rem', fontSize: '0.85rem', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.07em' }}>📦 Cargo by Priority</div>
           <ResponsiveContainer width="100%" height={180}>
-            <BarChart data={cargoByPriority} barSize={28}>
-              <XAxis dataKey="name" tick={{ fill: 'var(--text-secondary)', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: 'var(--text-secondary)', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--text-primary)' }} />
-              <Bar dataKey="value" fill="var(--accent-cyan)" radius={[4, 4, 0, 0]} />
+            <BarChart data={cargoByPriority} barSize={32}>
+              <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <Tooltip content={<CustomTooltip />} />
+              <Bar dataKey="value" fill="url(#barGrad)" radius={[8, 8, 0, 0]} />
+              <defs>
+                <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#4f6ef7" />
+                  <stop offset="100%" stopColor="#8b5cf6" />
+                </linearGradient>
+              </defs>
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
+      {/* Recent Flights Table */}
       <div className="card">
-        <div style={{ fontWeight: 600, marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <PlaneTakeoff size={16} color="var(--accent-cyan)" /> Recent Flights
+        <div style={{ fontWeight: 700, marginBottom: '1.25rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <div style={{ width: 32, height: 32, borderRadius: 10, background: '#e8edff', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid rgba(79,110,247,0.15)' }}>
+            <PlaneTakeoff size={15} color="#4f6ef7" />
+          </div>
+          <span style={{ background: 'linear-gradient(135deg, #4f6ef7, #8b5cf6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            Recent Flights
+          </span>
         </div>
-        <div className="table-container" style={{ border: 'none' }}>
+        <div className="table-container" style={{ border: 'none', boxShadow: 'none' }}>
           <table>
             <thead>
               <tr>
@@ -185,12 +252,18 @@ export default function Dashboard() {
             <tbody>
               {data.flights.slice(0, 8).map(f => (
                 <tr key={f.id}>
-                  <td><span className="mono" style={{ color: 'var(--accent-cyan)' }}>{f.flightNumber}</span></td>
-                  <td style={{ color: 'var(--text-secondary)' }}>{f.origin} → {f.destination}</td>
-                  <td style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{new Date(f.departureTime).toLocaleString()}</td>
-                  <td>{f.aircraft ? f.aircraft.registrationNumber : <span style={{ color: 'var(--accent-red)', fontSize: '0.8rem' }}>Unassigned</span>}</td>
-                  <td>{f.crewCount || 0}</td>
-                  <td>{Math.round(f.totalCargoWeight || 0)}</td>
+                  <td><span className="mono" style={{ color: '#4f6ef7', fontWeight: 700, background: '#e8edff', padding: '2px 8px', borderRadius: 6, fontSize: '0.82rem' }}>{f.flightNumber}</span></td>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontWeight: 600 }}>
+                      <span style={{ color: '#1e293b' }}>{f.origin}</span>
+                      <span style={{ color: '#94a3b8', fontSize: '0.85rem' }}>→</span>
+                      <span style={{ color: '#1e293b' }}>{f.destination}</span>
+                    </div>
+                  </td>
+                  <td style={{ fontSize: '0.8rem', color: '#475569' }}>{new Date(f.departureTime).toLocaleString()}</td>
+                  <td>{f.aircraft ? <span style={{ fontWeight: 600 }}>{f.aircraft.registrationNumber}</span> : <span style={{ color: '#f43f5e', fontSize: '0.8rem', fontWeight: 600 }}>⚠ Unassigned</span>}</td>
+                  <td><span style={{ fontWeight: 700 }}>{f.crewCount || 0}</span></td>
+                  <td><span style={{ fontWeight: 600 }}>{Math.round(f.totalCargoWeight || 0)}</span></td>
                   <td><span className={`badge badge-${f.status.toLowerCase()}`}>{f.status}</span></td>
                 </tr>
               ))}
